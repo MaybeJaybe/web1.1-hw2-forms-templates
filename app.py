@@ -27,8 +27,9 @@ def choose_froyo():
 
 @app.route('/froyo_results')
 def show_froyo_results():
+    users_froyo_flavor = request.args.get('flavor')
     """Shows the user what they ordered from the previous page."""
-    pass
+    return f'You ordered {users_froyo_flavor} flavored Fro-Yo!'
 
 @app.route('/favorites')
 def favorites():
