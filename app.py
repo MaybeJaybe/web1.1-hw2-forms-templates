@@ -21,6 +21,8 @@ def choose_froyo():
     <form action="/froyo_results" method="GET">
         What is your favourite Fro-Yo flavor? <br/>
         <input type="text" name="flavor"><br/>
+        What about your favourite toppings? <br/>
+        <input type="text" name="toppings"><br/>
         <input type="submit" value="Submit!">
         </form>
         """
@@ -28,8 +30,12 @@ def choose_froyo():
 @app.route('/froyo_results')
 def show_froyo_results():
     users_froyo_flavor = request.args.get('flavor')
+    users_toppings = request.args.get('toppings')
     """Shows the user what they ordered from the previous page."""
-    return f'You ordered {users_froyo_flavor} flavored Fro-Yo!'
+    return f'You ordered {users_froyo_flavor} flavored Fro-Yo! It has {users_toppings} on it.'
+
+
+# froyo done
 
 @app.route('/favorites')
 def favorites():
