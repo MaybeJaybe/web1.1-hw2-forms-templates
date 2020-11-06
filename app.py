@@ -17,26 +17,16 @@ def homepage():
 @app.route('/froyo')
 def choose_froyo():
     """Shows a form to collect the user's Fro-Yo order."""
-    # return """
-    # <form action="/froyo_results" method="GET">
-    #     What is your favorite Fro-Yo flavor? <br/>
-    #     <input type="text" name="flavor"><br/>
-    #     What about your favorite toppings? <br/>
-    #     <input type="text" name="toppings"><br/>
-    #     <input type="submit" value="Submit!">
-    # </form>
-    #     """
     return render_template('froyo_form.html')
 
 @app.route('/froyo_results')
 def show_froyo_results():
+    """Shows the user what they ordered from the previous page."""
     context = {
         'users_froyo_flavor': request.args.get('flavor'),
         'users_toppings': request.args.get('toppings')
     }
     return render_template('froyo_results.html', **context)
-    """Shows the user what they ordered from the previous page."""
-    # return f'You ordered {users_froyo_flavor} flavored Fro-Yo! It has {users_toppings} on it.'
 
 # favorites section
 @app.route('/favorites')
@@ -86,44 +76,35 @@ def message_results():
 @app.route('/calculator')
 def calculator():
     """Shows the user a form to enter 2 numbers and an operation."""
-    return """
-    <form action="/calculator_results" method="GET">
-        Please enter 2 numbers and select an operator.<br/><br/>
-        <input type="number" name="operand1">
-        <select name="operation">
-            <option value="add">+</option>
-            <option value="subtract">-</option>
-            <option value="multiply">*</option>
-            <option value="divide">/</option>
-        </select>
-        <input type="number" name="operand2">
-        <input type="submit" value="Submit!">
-    </form>
-    """
+    return render_template('calculator_form.html')
 
 @app.route('/calculator_results')
 def calculator_results():
     """Shows the user the result of their calculation."""
+
     operation = request.args.get('operation')
     num1 = request.args.get('operand1')
     num2 = request.args.get('operand2')
+    num1=int(num1)
+    num2=int(num2)
 
-    if num1.isdigit()==True and num2.isdigit()==True:
-        num1=int(num1)
-        num2=int(num2)
-        if operation == 'add':
-            result = num1 + num2
-        elif operation == 'subtract':
-            result = num1 - num2
-        elif operation == 'multiply':
-            result = num1 * num2
-        else:
-            result = num1 / num2
-        return f'You chose to {operation} {num1} and {num2}. The answer is {result}'
+    if operation == 'add':
+        result = num1 + num2
+    elif operation == 'subtract':
+        result = num1 - num2
+    elif operation == 'multiply':
+        result = num1 * num2
     else:
-        return 'Invalid.'
-    # i dont think this is needed but just in case? when you try to use negatives it doesnt register as a number though
-    
+        result = num1 / num2
+
+    context = {
+    'operation': request.args.get('operation'),
+    'num1': request.args.get('operand1'),
+    'num2': request.args.get('operand2'),
+    'result': result
+    }
+
+    return render_template('calculator_results.html', **context)
 
 
 # List of compliments to be used in the `compliments_results` route (feel free 
