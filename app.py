@@ -8,23 +8,23 @@ def sort_letters(message):
     and return the new string."""
     return ''.join(sorted(list(message)))
 
-
 @app.route('/')
 def homepage():
     """A homepage with handy links for your convenience."""
     return render_template('home.html')
 
+# froyo section
 @app.route('/froyo')
 def choose_froyo():
     """Shows a form to collect the user's Fro-Yo order."""
     return """
     <form action="/froyo_results" method="GET">
-        What is your favourite Fro-Yo flavor? <br/>
+        What is your favorite Fro-Yo flavor? <br/>
         <input type="text" name="flavor"><br/>
-        What about your favourite toppings? <br/>
+        What about your favorite toppings? <br/>
         <input type="text" name="toppings"><br/>
         <input type="submit" value="Submit!">
-        </form>
+    </form>
         """
 
 @app.route('/froyo_results')
@@ -34,29 +34,52 @@ def show_froyo_results():
     """Shows the user what they ordered from the previous page."""
     return f'You ordered {users_froyo_flavor} flavored Fro-Yo! It has {users_toppings} on it.'
 
-
-# froyo done
-
+# favorites section
 @app.route('/favorites')
 def favorites():
     """Shows the user a form to choose their favorite color, animal, and city."""
-    pass
-
+    return """
+    <form action="/favorites_results" method="GET">
+        What is your favorite color?<br/>
+        <input type="text" name="color"><br/>
+        What is your favorite animal?<br/>
+        <input type="text" name="animal"><br/>
+        What is your favorite city?<br/>
+        <input type="text" name="city"<br/>
+        <input type="submit" value="Submit">
+    </form>
+    """
+    
 @app.route('/favorites_results')
-def favorites_results():
+def show_favorites_results():
+    fav_color = request.args.get('color')
+    fav_animal = request.args.get('animal')
+    fav_city = request.args.get('city')
     """Shows the user a nice message using their form results."""
-    pass
+    return f'I bet your dream would be to have a {fav_color} colored {fav_animal} plushie to cuddle when you live in {fav_city}.'
 
+# secret message section
 @app.route('/secret_message')
 def secret_message():
     """Shows the user a form to collect a secret message. Sends the result via
     the POST method to keep it a secret!"""
-    pass
+    return """
+    <form action="/message_results" method="POST">
+        Enter the phrase you would like to make secret:
+        <input type="text" name="message">
+        <input type="submit" name="Submit">
+    </form>
+    """
 
 @app.route('/message_results', methods=['POST'])
 def message_results():
+    message = request.form.post('message')
+    # secret_message = message.sort_letters
     """Shows the user their message, with the letters in sorted order."""
-    pass
+    return f'Here\'s your secret message: <br/>{message}'
+
+# I am stuck on secret message currently dont worry about it 
+
 
 @app.route('/calculator')
 def calculator():
@@ -127,4 +150,4 @@ def compliments_results():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
