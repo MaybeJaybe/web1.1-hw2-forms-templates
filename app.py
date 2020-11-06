@@ -17,22 +17,26 @@ def homepage():
 @app.route('/froyo')
 def choose_froyo():
     """Shows a form to collect the user's Fro-Yo order."""
-    return """
-    <form action="/froyo_results" method="GET">
-        What is your favorite Fro-Yo flavor? <br/>
-        <input type="text" name="flavor"><br/>
-        What about your favorite toppings? <br/>
-        <input type="text" name="toppings"><br/>
-        <input type="submit" value="Submit!">
-    </form>
-        """
+    # return """
+    # <form action="/froyo_results" method="GET">
+    #     What is your favorite Fro-Yo flavor? <br/>
+    #     <input type="text" name="flavor"><br/>
+    #     What about your favorite toppings? <br/>
+    #     <input type="text" name="toppings"><br/>
+    #     <input type="submit" value="Submit!">
+    # </form>
+    #     """
+    return render_template('froyo_form.html')
 
 @app.route('/froyo_results')
 def show_froyo_results():
-    users_froyo_flavor = request.args.get('flavor')
-    users_toppings = request.args.get('toppings')
+    context = {
+        'users_froyo_flavor': request.args.get('flavor'),
+        'users_toppings': request.args.get('toppings')
+    }
+    return render_template('froyo_results.html', **context)
     """Shows the user what they ordered from the previous page."""
-    return f'You ordered {users_froyo_flavor} flavored Fro-Yo! It has {users_toppings} on it.'
+    # return f'You ordered {users_froyo_flavor} flavored Fro-Yo! It has {users_toppings} on it.'
 
 # favorites section
 @app.route('/favorites')
@@ -73,14 +77,12 @@ def secret_message():
 
 @app.route('/message_results', methods=['POST'])
 def message_results():
-    message = request.form.post('message')
-    # secret_message = message.sort_letters
     """Shows the user their message, with the letters in sorted order."""
-    return f'Here\'s your secret message: <br/>{message}'
+    message = request.form.get('message')
+    secret_message = sort_letters(message)
+    return f'Here\'s your secret message: <br/>{secret_message}'
 
-# I am stuck on secret message currently dont worry about it 
-
-
+# calculator section
 @app.route('/calculator')
 def calculator():
     """Shows the user a form to enter 2 numbers and an operation."""
@@ -102,7 +104,26 @@ def calculator():
 @app.route('/calculator_results')
 def calculator_results():
     """Shows the user the result of their calculation."""
-    pass
+    operation = request.args.get('operation')
+    num1 = request.args.get('operand1')
+    num2 = request.args.get('operand2')
+
+    if num1.isdigit()==True and num2.isdigit()==True:
+        num1=int(num1)
+        num2=int(num2)
+        if operation == 'add':
+            result = num1 + num2
+        elif operation == 'subtract':
+            result = num1 - num2
+        elif operation == 'multiply':
+            result = num1 * num2
+        else:
+            result = num1 / num2
+        return f'You chose to {operation} {num1} and {num2}. The answer is {result}'
+    else:
+        return 'Invalid.'
+    # i dont think this is needed but just in case? when you try to use negatives it doesnt register as a number though
+    
 
 
 # List of compliments to be used in the `compliments_results` route (feel free 
